@@ -140,6 +140,9 @@ namespace HTFanControl.Main
                     case "/togglefan":
                         _HTFanCtrl.ToggleFan();
                         break;
+                    case "/togglespray":
+                        _HTFanCtrl.ToggleSpray();
+                        break;
                     case "/toggleoffset":
                         _HTFanCtrl._offsetEnabled = !_HTFanCtrl._offsetEnabled;
                         _HTFanCtrl.ReInitialize(false);
@@ -224,6 +227,17 @@ namespace HTFanControl.Main
             {
                 html = html.Replace("{color}", "danger");
                 html = html.Replace("{status}", "Fans Disabled");
+            }
+
+            if (_HTFanCtrl._sprayIsEnabled)
+            {
+                html = html.Replace("{color2}", "success");
+                html = html.Replace("{spraystatus}", "Spray Enabled");
+            }
+            else
+            {
+                html = html.Replace("{color2}", "danger");
+                html = html.Replace("{spraystatus}", "Spray Disabled");
             }
 
             if(_HTFanCtrl._settings.MediaPlayerType == "Audio")
@@ -468,6 +482,10 @@ namespace HTFanControl.Main
             html = html.Replace("{HIGHSpinupOffset}", _HTFanCtrl._settings.HIGHSpinupOffsetMS.ToString());
             html = html.Replace("{SpindownOffset}", _HTFanCtrl._settings.SpindownOffsetMS.ToString());
 
+            html = html.Replace("{SprayGlobalOffset}", _HTFanCtrl._settings.SprayGlobalOffsetMS.ToString());
+            html = html.Replace("{SpraySleepToWakeDelay}", _HTFanCtrl._settings.SpraySleepToWakeDelayMS.ToString());
+            html = html.Replace("{SprayActiveOffset}", _HTFanCtrl._settings.SprayActiveOffsetMS.ToString());
+
             html = html.Replace("{version}", @$"Version: {_version} <a href=""checkupdate"">(Check For Update)</a>");
 
             return html;
@@ -511,6 +529,9 @@ namespace HTFanControl.Main
                 _HTFanCtrl._settings.MEDSpinupOffsetMS = int.TryParse(data.RootElement.GetProperty("MEDSpinupOffset").GetString(), out int MEDSpinupOffset) ? MEDSpinupOffset : 0;
                 _HTFanCtrl._settings.HIGHSpinupOffsetMS = int.TryParse(data.RootElement.GetProperty("HIGHSpinupOffset").GetString(), out int HIGHSpinupOffset) ? HIGHSpinupOffset : 0;
                 _HTFanCtrl._settings.SpindownOffsetMS = int.TryParse(data.RootElement.GetProperty("SpindownOffset").GetString(), out int SpindownOffset) ? SpindownOffset : 0;
+                _HTFanCtrl._settings.SprayGlobalOffsetMS = int.TryParse(data.RootElement.GetProperty("SprayGlobalOffset").GetString(), out int SprayGlobalOffset) ? SprayGlobalOffset : 0;
+                _HTFanCtrl._settings.SpraySleepToWakeDelayMS = int.TryParse(data.RootElement.GetProperty("SpraySleepToWakeDelay").GetString(), out int SpraySleepToWakeDelay) ? SpraySleepToWakeDelay : 0;
+                _HTFanCtrl._settings.SprayActiveOffsetMS = int.TryParse(data.RootElement.GetProperty("SprayActiveOffset").GetString(), out int SprayActiveOffset) ? SprayActiveOffset : 0;
                 _HTFanCtrl._settings.MediaPlayerType = data.RootElement.GetProperty("MediaPlayer").GetString();
                 _HTFanCtrl._settings.PlexToken = data.RootElement.GetProperty("PlexToken").GetString();
 

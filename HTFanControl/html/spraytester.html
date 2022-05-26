@@ -2,7 +2,7 @@
 <head>
 	<meta charset="utf-8" />
 	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-	<title>HTFanControl {version}</title>
+	<title>Spray Tester</title>
 	<link rel="manifest" href='data:application/manifest+json,{"name": "HTFanControl","short_name": "HTFanControl","lang": "en-US","start_url": " / ","scope": " / ","display": "fullscreen"}' />
 	<meta name="mobile-web-app-capable" content="yes">
 	<meta name="apple-mobile-web-app-capable" content="yes">
@@ -17,47 +17,17 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 	<script>
-		function reload()
+        function fancmd(cmd)
 		{
-            var r = confirm("Are you sure?");
-			if (r == true)
-			{
-                fetch('reload');
-            }
+            fetch('fancmd', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/text',
+                },
+                body: cmd
+            });
 		}
 
-		function toggleFan()
-		{
-			fetch('togglefan');
-            location.reload();
-		}
-
-		function toggleSpray()
-		{
-			fetch('togglespray');
-            location.reload();
-		}
-
-		function toggleOffset()
-		{
-            fetch('toggleoffset');
-            location.reload();
-        }
-
-        function clearError()
-		{
-            fetch('clearerror');
-        }
-
-		async function load_data()
-		{
-            const response = await fetch("statusdata")
-            const html = await response.text();
-            document.getElementById("data").innerHTML = html;
-        }
-
-		load_data();
-        setInterval(load_data, 1000);
 	</script>
 	<style>
 		* {
@@ -67,40 +37,34 @@
         a:hover {
             color: white;
         }
-		
+
+		button{
+			width: 200px;
+			height: 50px;
+		}
+
 		body {
 			color: white;
 			background-color: black;
 		}
 
-		.ngroup {
-            outline: 1px solid gray;
-            padding-top: 6px;
-            padding-left: 4px;
-            padding-right: 4px;
-            margin-bottom: 8px;
-			display: table;
-        }
-		
-		.nrow {
-            display: flex;
-        }
-		
-		.nitem {
-            margin-bottom: 6px;
-            flex-shrink: 1;
-        }
-		
-		ul {
-            display: flex;
-            margin-left: -15px;
-            margin-right: -15px;
+        span {
+            padding-top: 4px;
+            padding-bottom: 4px;
+            padding-left: 8px;
+            padding-right: 8px;
         }
 
-        li {
-            flex-grow: 1;
-            text-align: center;
-        }
+		ul {
+			display: flex;
+			margin-left: -15px;
+			margin-right: -15px;
+		}
+
+		li {
+			flex-grow: 1;
+			text-align: center;
+		}
 
         .nav-tabs .nav-link.active {
             color: lightgreen;
@@ -116,26 +80,39 @@
         }
 	</style>
 </head>
-<body style="background-color: black;">
+<body>
 	<div class="container body-content">
 
 		<ul class="nav nav-tabs bg-dark sticky-top">
 			<li class="nav-item">
-				<a class="nav-link active bg-dark" href="/">Status</a>
+				<a class="nav-link" href="/">Status</a>
 			</li>
 			<li class="nav-item">
 				<a class="nav-link" href="settings">Settings</a>
 			</li>
 			<li class="nav-item">
-				<a class="nav-link" href="manage">Wind Tracks</a>
+				<a class="nav-link" href="logviewer">Log Viewer</a>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link" href="fantester">Fan Tester</a>
+			</li>
+            <li class="nav-item">
+				<a class="nav-link active bg-dark" href="spraytester">Spray Tester</a>
 			</li>
 		</ul>
 
-		<div id="data"></div>
-
-		<button onclick="toggleFan()" class="btn btn-{color}">{status}</button>
-		<button onclick="toggleSpray()" class="btn btn-{color2}">{spraystatus}</button>
-		<button onclick="reload()" class="btn btn-primary">{reloadbtn}</button>
+		<br \><br \>
+		<button onclick="fancmd('SPRAYOFF')" class="btn btn-danger">SPRAYOFF</button>
+		<br \><br \>
+		<button onclick="fancmd('SPRAYON')" class="btn btn-primary">SPRAYON</button>
+		<br \><br \>
+		<button onclick="fancmd('BURST')" class="btn btn-primary">BURST</button>
+		<br \><br \>
+		<button onclick="fancmd('SHORTBURST')" class="btn btn-primary">SHORTBURST</button>
+		<br \><br \>
+		<button onclick="fancmd('MEDBURST')" class="btn btn-primary">MEDBURST</button>
+        <br \><br \>
+		<button onclick="fancmd('LONGBURST')" class="btn btn-primary">LONGBURST</button>
 
 	</div>
 </body>

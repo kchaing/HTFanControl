@@ -23,6 +23,7 @@ namespace HTFanControl.Main
         public int _nextCmdIndex;
         public bool _isPlaying = false;
         public bool _isEnabled = true;
+        public bool _sprayIsEnabled = true;
         public bool _hasOffset = false;
         public double _offset;
         public bool _offsetEnabled = false;
@@ -182,6 +183,43 @@ namespace HTFanControl.Main
             }
         }
 
+        public void ToggleSpray()
+        {
+            if (_sprayIsEnabled)
+            {
+                _sprayIsEnabled = false;
+
+                if (!_fanController.SendCMD("SPRAYOFF"))
+                {
+                    _errorStatus = _fanController.ErrorStatus;
+                }
+                _log.LogMsg("Spray Disabled");
+            }
+            else
+            {
+                _log.LogMsg("Spray Enabled");
+
+                _sprayIsEnabled = true;
+
+                if (_videoTimer != null)
+                {
+                    try
+                    {
+                        if (_isPlaying) //I think i need to add logic here to add spray offset since it needs to be real time??
+                        {
+                            _log.LogMsg($"TEST: {_videoTimeCodes[_curCmdIndex].Item1.ToString("G").Substring(2, 12)},{_videoTimeCodes[_curCmdIndex].Item2}");
+                            if (!_fanController.SendCMD(_videoTimeCodes[_curCmdIndex].Item2))
+                            {
+                                _errorStatus = _fanController.ErrorStatus;
+                            }
+                            _log.LogMsg($"Sent CMD: {_videoTimeCodes[_curCmdIndex].Item1.ToString("G").Substring(2, 12)},{_videoTimeCodes[_curCmdIndex].Item2}");
+                        }
+                    }
+                    catch { }
+                }
+            }
+        }
+
         private void SyncTimerTick(object o)
         {
             SyncVideo();
@@ -265,7 +303,20 @@ namespace HTFanControl.Main
                 _log.LogMsg($"Sent CMD: {fanCmd}");
             }
 
-            if (_isEnabled)
+            bool isFanCmd = false;
+            bool isSprayCmd = false;
+            
+            if (fanCmd.Equals("OFF") || fanCmd.Equals("ECO") || fanCmd.Equals("LOW") || fanCmd.Equals("MED") || fanCmd.Equals("HIGH"))
+            {
+                isFanCmd = true;
+            }
+            if (fanCmd.Equals("SPRAYOFF") || fanCmd.Equals("SPRAYON") || fanCmd.Equals("BURST") || fanCmd.Equals("SHORTBURST") || fanCmd.Equals("MEDBURST") || fanCmd.Equals("LONGBURST"))
+            {
+                isSprayCmd = true;
+            }
+            
+
+            if (_isEnabled && isFanCmd)
             {
                 if (!_fanController.SendCMD(fanCmd))
                 {
@@ -273,7 +324,15 @@ namespace HTFanControl.Main
                 }
             }
 
-            //global minimum command gap
+            if (_sprayIsEnabled && isSprayCmd) //add spray offset logic here?
+            {
+                _log.LogMsg($"Entered Spray Is Enabled statement: {_sprayIsEnabled}");
+                if (!_fanController.SendCMD(fanCmd))
+                {
+                    _errorStatus = _fanController.ErrorStatus;
+                }
+            }
+
             Thread.Sleep(250);
         }
 
@@ -384,12 +443,19 @@ namespace HTFanControl.Main
                         string lineTime = lineData[0];
                         string lineCmd = lineData[1];
 
-                        //check if this timecode contains a fan command so we can apply offsets
+                        // check if this timecode contains a fan command or spray (global offset only) so we can apply offsets
                         bool isFanCmd = false;
-
-                        if (lineCmd == "OFF" || lineCmd == "ECO" || lineCmd == "LOW" || lineCmd == "MED" || lineCmd == "HIGH")
+                        bool isSprayCmd = false;
+                        for (int j = 1; j < lineData.Length; j++)
                         {
-                            isFanCmd = true;
+                            if (lineData[j].Equals("OFF") || lineData[j].Equals("ECO") || lineData[j].Equals("LOW") || lineData[j].Equals("MED") || lineData[j].Equals("HIGH"))
+                            {
+                                isFanCmd = true;
+                            }
+                            if (lineData[j].Equals("SPRAYOFF") || lineData[j].Equals("SPRAYON") || lineData[j].Equals("BURST") || lineData[j].Equals("SHORTBURST") || lineData[j].Equals("MEDBURST") || lineData[j].Equals("LONGBURST"))
+                            {
+                                isSprayCmd = true;
+                            }
                         }
 
                         double? timeCode = null;
@@ -410,6 +476,11 @@ namespace HTFanControl.Main
                             if (isFanCmd)
                             {
                                 timeCode = timeCode - _settings.GlobalOffsetMS;
+                            }
+
+                            if (isSprayCmd) //add global spray offset
+                            {
+                                timeCode = timeCode - _settings.SprayGlobalOffsetMS;
                             }
 
                             rawPrevTime = (double)timeCode;
