@@ -45,7 +45,8 @@ namespace HTFanControl.Util
         public int HIGHSpinupOffsetMS { get; set; }
         public int SpindownOffsetMS { get; set; }
         public int SprayGlobalOffsetMS { get; set; }
-        public int SpraySleepToWakeDelayMS { get; set; } 
+        public int SprayWakeToSleepDurationMS { get; set; }
+        public int SpraySleepOffsetMS { get; set; }
         public int SprayActiveOffsetMS { get; set; } 
 
         public static Settings LoadSettings()
@@ -84,9 +85,10 @@ namespace HTFanControl.Util
                 settings.MEDSpinupOffsetMS = 1000;
                 settings.HIGHSpinupOffsetMS = 800;
                 settings.SpindownOffsetMS = 250;
-                settings.SprayGlobalOffsetMS = 0;
-                settings.SpraySleepToWakeDelayMS = 1350;
-                settings.SprayActiveOffsetMS = 70;
+                settings.SprayGlobalOffsetMS = 100;
+                settings.SprayWakeToSleepDurationMS = 120000;
+                settings.SpraySleepOffsetMS = 1350;
+                settings.SprayActiveOffsetMS = 60;
             }
 
             return settings;

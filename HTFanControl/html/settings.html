@@ -69,7 +69,8 @@
 				MEDSpinupOffset: document.getElementById('MEDSpinupOffset').value,
                 HIGHSpinupOffset: document.getElementById('HIGHSpinupOffset').value,
 				SprayGlobalOffset: document.getElementById('SprayGlobalOffset').value,
-				SpraySleepToWakeDelay: document.getElementById('SpraySleepToWakeDelay').value,
+                SprayWakeToSleepDuration: document.getElementById('SprayWakeToSleepDuration').value,
+                SpraySleepOffset: document.getElementById('SpraySleepOffset').value,
 				SprayActiveOffset: document.getElementById('SprayActiveOffset').value,
 				MediaPlayer: document.querySelector('input[name="MediaPlayer"]:checked').value,
 				PlexToken: document.getElementById('PlexToken').value
@@ -391,9 +392,10 @@
 	<b style="font-size:larger">Spray Offset Calibration</b>
 	<div class="nrow">
 		<div class="nitem" style="flex-grow: 1;"><b>Spray Global Offset (ms)</b><input type="number" class="form-control" id="SprayGlobalOffset" value="{SprayGlobalOffset}"></div>
-		<div class="nitem" style="flex-grow: 1;"><b>Sleep to Wake Delay (ms)</b><input type="number" class="form-control" id="SpraySleepToWakeDelay" value="{SpraySleepToWakeDelay}"></div>
+		<div class="nitem" style="flex-grow: 1;"><b>Wake To Sleep Duration (ms)</b><input type="number" class="form-control" id="SprayWakeToSleepDuration" value="{SprayWakeToSleepDuration}"></div>
 	</div>
 	<div class="nrow">
+		<div class="nitem" style="flex-grow: 1;"><b>Spray Sleep Offset (ms)</b><input type="number" class="form-control" id="SpraySleepOffset" value="{SpraySleepOffset}"></div>
 		<div class="nitem" style="flex-grow: 1;"><b>Spray Active Offset (ms)</b><input type="number" class="form-control" id="SprayActiveOffset" value="{SprayActiveOffset}"></div>
 	</div>
 </div>

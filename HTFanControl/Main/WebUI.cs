@@ -483,9 +483,10 @@ namespace HTFanControl.Main
             html = html.Replace("{SpindownOffset}", _HTFanCtrl._settings.SpindownOffsetMS.ToString());
 
             html = html.Replace("{SprayGlobalOffset}", _HTFanCtrl._settings.SprayGlobalOffsetMS.ToString());
-            html = html.Replace("{SpraySleepToWakeDelay}", _HTFanCtrl._settings.SpraySleepToWakeDelayMS.ToString());
+            html = html.Replace("{SpraySleepOffset}", _HTFanCtrl._settings.SpraySleepOffsetMS.ToString());
             html = html.Replace("{SprayActiveOffset}", _HTFanCtrl._settings.SprayActiveOffsetMS.ToString());
-
+            html = html.Replace("{SprayWakeToSleepDuration}", _HTFanCtrl._settings.SprayWakeToSleepDurationMS.ToString());
+            
             html = html.Replace("{version}", @$"Version: {_version} <a href=""checkupdate"">(Check For Update)</a>");
 
             return html;
@@ -530,7 +531,8 @@ namespace HTFanControl.Main
                 _HTFanCtrl._settings.HIGHSpinupOffsetMS = int.TryParse(data.RootElement.GetProperty("HIGHSpinupOffset").GetString(), out int HIGHSpinupOffset) ? HIGHSpinupOffset : 0;
                 _HTFanCtrl._settings.SpindownOffsetMS = int.TryParse(data.RootElement.GetProperty("SpindownOffset").GetString(), out int SpindownOffset) ? SpindownOffset : 0;
                 _HTFanCtrl._settings.SprayGlobalOffsetMS = int.TryParse(data.RootElement.GetProperty("SprayGlobalOffset").GetString(), out int SprayGlobalOffset) ? SprayGlobalOffset : 0;
-                _HTFanCtrl._settings.SpraySleepToWakeDelayMS = int.TryParse(data.RootElement.GetProperty("SpraySleepToWakeDelay").GetString(), out int SpraySleepToWakeDelay) ? SpraySleepToWakeDelay : 0;
+                _HTFanCtrl._settings.SprayWakeToSleepDurationMS = int.TryParse(data.RootElement.GetProperty("SprayWakeToSleepDuration").GetString(), out int SprayWakeToSleepDuration) ? SprayWakeToSleepDuration : 0;
+                _HTFanCtrl._settings.SpraySleepOffsetMS = int.TryParse(data.RootElement.GetProperty("SpraySleepOffset").GetString(), out int SpraySleepOffset) ? SpraySleepOffset : 0;
                 _HTFanCtrl._settings.SprayActiveOffsetMS = int.TryParse(data.RootElement.GetProperty("SprayActiveOffset").GetString(), out int SprayActiveOffset) ? SprayActiveOffset : 0;
                 _HTFanCtrl._settings.MediaPlayerType = data.RootElement.GetProperty("MediaPlayer").GetString();
                 _HTFanCtrl._settings.PlexToken = data.RootElement.GetProperty("PlexToken").GetString();
