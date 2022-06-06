@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading;
-using System.Diagnostics;
 using HTFanControl.Timers;
 using System.IO.Compression;
 using HTFanControl.Controllers;
@@ -41,9 +40,6 @@ namespace HTFanControl.Main
 
         public Log _log;
 
-        public System.Diagnostics.Stopwatch _sprayStopWatch;
-        public double lastActualSprayCmd = -500;
-
         public HTFanControl()
         {
             _log = new Log();
@@ -52,8 +48,6 @@ namespace HTFanControl.Main
             Settings.SaveSettings(_settings);
 
             _syncTimer = new Timer(SyncTimerTick, null, Timeout.Infinite, Timeout.Infinite);
-
-            _sprayStopWatch = new System.Diagnostics.Stopwatch();
 
             SelectSyncSource();
 
@@ -213,14 +207,12 @@ namespace HTFanControl.Main
                     try
                     {
                         if (_isPlaying) //I think this logic will send prev command after playing starts which we dont want
-                        {
-                            _log.LogMsg($"TEST: {_videoTimeCodes[_curCmdIndex].Item1.ToString("G").Substring(2, 12)},{_videoTimeCodes[_curCmdIndex].Item2}");
+                        {                            
                             if (!_fanController.SendCMD(_videoTimeCodes[_curCmdIndex].Item2))
                             {
                                 _errorStatus = _fanController.ErrorStatus;
                             }
-                            _log.LogMsg($"Sent CMD: {_videoTimeCodes[_curCmdIndex].Item1.ToString("G").Substring(2, 12)},{_videoTimeCodes[_curCmdIndex].Item2}");
-                            //_log.LogMsg($"Dont send spray command after toggling?");
+                            _log.LogMsg($"Sent CMD: {_videoTimeCodes[_curCmdIndex].Item1.ToString("G").Substring(2, 12)},{_videoTimeCodes[_curCmdIndex].Item2}");                           
                         }
                     }
                     catch { }
@@ -336,20 +328,6 @@ namespace HTFanControl.Main
 
             if (_sprayIsEnabled && isSprayCmd) //add spray offset logic here?
             {
-                if(_sprayStopWatch.IsRunning)
-                {
-                    _sprayStopWatch.Stop();
-                    lastActualSprayCmd = (double)_sprayStopWatch.ElapsedMilliseconds;
-                    _log.LogMsg($"Entered Spray Stopwatch Already Running: {lastActualSprayCmd}");
-                    _sprayStopWatch.Reset();
-                    _sprayStopWatch.Start();
-                }
-                else
-                {
-                    lastActualSprayCmd = 0;
-                    _sprayStopWatch.Start();
-                    _log.LogMsg($"Entered Spray Stopwatch Initial Spray: {lastActualSprayCmd}");
-                }
                 _log.LogMsg($"Entered Spray Is Enabled statement: {_sprayIsEnabled}");
                 if (!_fanController.SendCMD(fanCmd))
                 {
@@ -510,30 +488,22 @@ namespace HTFanControl.Main
                                 _log.LogMsg($"SprayCMD: {lineData[1]}, Last Spray Cmd: {lastSprayCmd}, Raw Timecode: {timeCode}");
                                 timeCode = timeCode - _settings.SprayGlobalOffsetMS;
                                 _log.LogMsg($"Applying Spray Global Offset: {timeCode}");
-                                if ((lastSprayCmd < 0 || timeCode - lastSprayCmd > _settings.SprayWakeToSleepDurationMS)) // && lastActualSprayCmd < 0)
+                                if ((lastSprayCmd < 0 || timeCode - lastSprayCmd > _settings.SprayWakeToSleepDurationMS)) 
                                 {
-                                    timeCode = timeCode - _settings.SpraySleepOffsetMS;
-                                    _log.LogMsg($"Last Actual Spray Time: {lastActualSprayCmd}, Elapsed Time from Spray: {_sprayStopWatch.ElapsedMilliseconds}, Applying Spray Sleep Offset: {timeCode}");
+                                    timeCode = timeCode - _settings.SpraySleepOffsetMS;                        
+                                    _log.LogMsg($"Applying Spray Sleep Offset: {timeCode}");
                                 }
-                                /*else if (_sprayStopWatch.ElapsedMilliseconds - lastActualSprayCmd > _settings.SprayWakeToSleepDurationMS)
-                                {
-                                    timeCode = timeCode - _settings.SpraySleepOffsetMS;
-                                    lastSprayCmd = -500; //reset spray commands after this?
-                                    _sprayStopWatch.Reset();
-                                    lastActualSprayCmd = -500;
-                                    _log.LogMsg($"Last Actual Spray Time: {lastActualSprayCmd}, Elapsed Time from Spray: {_sprayStopWatch.ElapsedMilliseconds}, Applying Spray Sleep Offset Due to Sprayer Being Off Past Wake to Sleep Duration: {timeCode}");
-                                }*/
                                 else
                                 {
                                     timeCode = timeCode - _settings.SprayActiveOffsetMS;
-                                    _log.LogMsg($"Last Actual Spray Time: {lastActualSprayCmd}, Elapsed Time from Spray: {_sprayStopWatch.ElapsedMilliseconds}, Applying Spray Active Offset: {timeCode}");
+                                    _log.LogMsg($"Applying Spray Active Offset: {timeCode}");
                                 }
                                                                                             
                                 //if offset makes timecode invalid, fix it
                                 if (timeCode < lastSprayCmd + 60)
                                 {                                    
                                     timeCode = lastSprayCmd + 60;
-                                    _log.LogMsg($"Too close to last spray command. Adding 60 ms: {timeCode}");
+                                    _log.LogMsg($"Invalid spray command. Adding 60 ms: {timeCode}");
                                 }
                                 lastSprayCmd = (double)timeCode;
                             }
@@ -571,6 +541,7 @@ namespace HTFanControl.Main
                                 if (timeCode < actualPrevTime + 500)
                                 {
                                     timeCode = actualPrevTime + 500;
+                                    _log.LogMsg($"Invalid fan command. Adding 500 ms: {timeCode}");
                                 }
                             }
 

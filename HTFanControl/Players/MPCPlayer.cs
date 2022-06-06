@@ -53,7 +53,6 @@ namespace HTFanControl.Players
                 if (doc.GetElementbyId("statestring").InnerText == "Playing")
                 {
                     IsPlaying = true;
-                    ErrorStatus = $"({DateTime.Now:h:mm:ss tt}) Test message";
                 }
                 else
                 {
