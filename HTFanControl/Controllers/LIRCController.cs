@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net;
+using System.Net.Http;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
@@ -29,6 +30,54 @@ namespace HTFanControl.Controllers
             bool goodResult = true;
 
             //case when fan needs to be turned ON before a command can be sent
+            try
+            {
+                HttpResponseMessage response = null;
+
+                using HttpClient httpClient = new HttpClient();
+                switch (cmd)
+                {
+                    case "SPRAYOFF":
+                        response = httpClient.GetAsync("http://192.168.50.222/SPRAY=OFF").Result;
+                        break;
+                    case "SPRAYON":
+                        response = httpClient.GetAsync("http://192.168.50.222/SPRAY=ON").Result;
+                        break;
+                    case "BURST":
+                        response = httpClient.GetAsync("http://192.168.50.222/SPRAYDURATION=100").Result;
+                        break;
+                    case "SHORTBURST":
+                        response = httpClient.GetAsync("http://192.168.50.222/SPRAYDURATION=30").Result;
+                        break;
+                    case "MEDBURST":
+                        response = httpClient.GetAsync("http://192.168.50.222/SPRAYDURATION=300").Result;
+                        break;
+                    case "LONGBURST":
+                        response = httpClient.GetAsync("http://192.168.50.222/SPRAYDURATION=500").Result;
+                        break;
+                    default:
+                        break;
+                }
+
+                if (response is not null)
+                {
+                    if (response.IsSuccessStatusCode)
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        throw new Exception();
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                ErrorStatus = $"Error sending http GET request.\n\n{e.Message}";
+                return false;
+            }
+            
+
             if (_ONcmd && _isOFF)
             {
                 if (cmd != "OFF")

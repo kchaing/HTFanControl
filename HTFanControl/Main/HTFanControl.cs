@@ -86,6 +86,7 @@ namespace HTFanControl.Main
             {
                 "LIRC" => new LIRCController(_settings),
                 "MQTT" => new MQTTController(_settings),
+                "HTTP" => new HTTPController(_settings),
                 _ => new LIRCController(_settings),
             };
 

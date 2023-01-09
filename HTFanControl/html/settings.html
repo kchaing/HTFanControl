@@ -57,6 +57,14 @@
 				MqttMEDpayload: document.getElementById('MqttMEDpayload').value,
                 MqttHIGHtopic: document.getElementById('MqttHIGHtopic').value,
 				MqttHIGHpayload: document.getElementById('MqttHIGHpayload').value,
+				HttpIP: document.getElementById('HttpIP').value,
+				HttpSprayOff: document.getElementById('HttpSprayOff').value,
+                HttpSprayOn: document.getElementById('HttpSprayOn').value,
+				HttpSprayBurst: document.getElementById('HttpSprayBurst').value,
+                HttpSprayShortBurst: document.getElementById('HttpSprayShortBurst').value,
+				HttpSprayMedBurst: document.getElementById('HttpSprayMedBurst').value,
+                HttpSprayLongBurst: document.getElementById('HttpSprayLongBurst').value,
+				MqttHIGHpayload: document.getElementById('MqttHIGHpayload').value,
                 MqttONtopic: document.getElementById('MqttONtopic').value,
 				MqttONpayload: document.getElementById('MqttONpayload').value,
 				MqttONdelay: document.getElementById('MqttONdelay').value,
@@ -101,12 +109,20 @@
 		{
 			document.getElementById('lircDiv').style.display = 'block';
 			document.getElementById('mqttDiv').style.display = 'none';
+            document.getElementById('httpDiv').style.display = 'none';
 		}
 		function mqtt()
 		{
 			document.getElementById('lircDiv').style.display = 'none';
 			document.getElementById('mqttDiv').style.display = 'block';
+            document.getElementById('httpDiv').style.display = 'none';
 		}
+		function http()
+		{
+            document.getElementById('lircDiv').style.display = 'none';
+			document.getElementById('mqttDiv').style.display = 'none';
+            document.getElementById('httpDiv').style.display = 'block';
+        }
 		function mpc()
 		{
 			document.getElementById('MediaPlayerPort').value = '13579';
@@ -167,7 +183,15 @@
 			{
 				document.getElementById('mqttDiv').style.display = 'block';
 				document.getElementById('lircDiv').style.display = 'none';
+                document.getElementById('httpDiv').style.display = 'none';
 			}
+
+			if (document.getElementById('HTTP').checked)
+			{
+                document.getElementById('httpDiv').style.display = 'block';
+				document.getElementById('mqttDiv').style.display = 'none';
+				document.getElementById('lircDiv').style.display = 'none';
+            }
 		}
 
 		window.addEventListener('DOMContentLoaded', showforms, false);
@@ -322,6 +346,10 @@
 				<input class="form-check-input" type="radio" name="Controller" id="LIRC" value="LIRC" onclick="lirc()" {LIRC}>
 				<label class="form-check-label" for="LIRC">LIRC</label>
 			</div>
+			<div class="form-check form-check-inline">
+				<input class="form-check-input" type="radio" name="Controller" id="HTTP" value="HTTP" onclick="http()" {HTTP}>
+				<label class="form-check-label" for="HTTP">HTTP</label>
+			</div>
 		</div>
 	</div>
 	<div id="lircDiv" class="hidelinux">
@@ -372,6 +400,34 @@
 			<div class="nitem" style="flex-grow: 1;"><b>ON Topic</b><input type="text" class="form-control" id="MqttONtopic" value="{MqttONtopic}"></div>
 			<div class="nitem" style="flex-grow: 1;"><b>ON Payload</b><input type="text" class="form-control" id="MqttONpayload" value="{MqttONpayload}"></div>
 			<div class="nitem" style="flex-grow: 1;"><b>ON Delay</b><input type="number" class="form-control" id="MqttONdelay" value="{MqttONdelay}"></div>
+		</div>
+	</div>
+
+	<div id="httpDiv" style="display: none; padding-bottom: 5px;">
+		<div class="nrow">
+			<div class="nitem" style="flex-grow: 1;"><b>HTTP Get IP</b><input type="text" class="form-control" id="HttpIP" value="{HttpIP}"></div>
+		</div>
+		<div class="nrow">
+			<div class="nitem" style="flex-grow: 1;"><b>Spray On HTTP Get Request</b><input type="text" class="form-control" id="HttpSprayOn" value="{HttpSprayOn}"></div>
+			<div class="nitem" style="flex-grow: 1;"><b>Spray Off HTTP Get Request</b><input type="text" class="form-control" id="HttpSprayOff" value="{HttpSprayOff}"></div>
+			<div class="nitem" style="flex-grow: 1;"><b>Spray Burst HTTP Get Request</b><input type="text" class="form-control" id="HttpSprayBurst" value="{HttpSprayBurst}"></div>
+			<div class="nitem" style="flex-grow: 1;"><b>Spray Short Burst HTTP Get Request</b><input type="text" class="form-control" id="HttpSprayShortBurst" value="{HttpSprayShortBurst}"></div>
+			<div class="nitem" style="flex-grow: 1;"><b>Spray Med Burst HTTP Get Request</b><input type="text" class="form-control" id="HttpSprayMedBurst" value="{HttpSprayMedBurst}"></div>
+			<div class="nitem" style="flex-grow: 1;"><b>Spray Long Burst HTTP Get Request</b><input type="text" class="form-control" id="HttpSprayLongBurst" value="{HttpSprayLongBurst}"></div>
+		</div>
+	</div>
+
+	<div id="httpDiv" style="display: none; padding-bottom: 5px;">
+		<div class="nrow">
+			<div class="nitem" style="flex-grow: 1;"><b>HTTP Get IP</b><input type="text" class="form-control" id="HttpIP" value="{HttpIP}"></div>
+		</div>
+		<div class="nrow">
+			<div class="nitem" style="flex-grow: 1;"><b>Spray On HTTP Get Request</b><input type="text" class="form-control" id="HttpSprayOn" value="{HttpSprayOn}"></div>
+			<div class="nitem" style="flex-grow: 1;"><b>Spray Off HTTP Get Request</b><input type="text" class="form-control" id="HttpSprayOff" value="{HttpSprayOff}"></div>
+			<div class="nitem" style="flex-grow: 1;"><b>Spray Burst HTTP Get Request</b><input type="text" class="form-control" id="HttpSprayBurst" value="{HttpSprayBurst}"></div>
+			<div class="nitem" style="flex-grow: 1;"><b>Spray Short Burst HTTP Get Request</b><input type="text" class="form-control" id="HttpSprayShortBurst" value="{HttpSprayShortBurst}"></div>
+			<div class="nitem" style="flex-grow: 1;"><b>Spray Med Burst HTTP Get Request</b><input type="text" class="form-control" id="HttpSprayMedBurst" value="{HttpSprayMedBurst}"></div>
+			<div class="nitem" style="flex-grow: 1;"><b>Spray Long Burst HTTP Get Request</b><input type="text" class="form-control" id="HttpSprayLongBurst" value="{HttpSprayLongBurst}"></div>
 		</div>
 	</div>
 

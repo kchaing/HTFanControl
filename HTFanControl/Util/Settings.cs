@@ -47,8 +47,14 @@ namespace HTFanControl.Util
         public int SprayGlobalOffsetMS { get; set; }
         public int SprayWakeToSleepDurationMS { get; set; }
         public int SpraySleepOffsetMS { get; set; }
-        public int SprayActiveOffsetMS { get; set; } 
-
+        public int SprayActiveOffsetMS { get; set; }
+        public string HTTP_Get_IP { get; set; }
+        public string HTTP_Get_SPRAYON { get; set; }
+        public string HTTP_Get_SPRAYOFF { get; set; }
+        public string HTTP_Get_SPRAYBURST { get; set; }
+        public string HTTP_Get_SPRAYSHORTBURST { get; set; }
+        public string HTTP_Get_SPRAYMEDBURST { get; set; }
+        public string HTTP_Get_SPRAYLONGBURST { get; set; }
         public static Settings LoadSettings()
         {
             Settings settings = new Settings();
@@ -89,6 +95,13 @@ namespace HTFanControl.Util
                 settings.SprayWakeToSleepDurationMS = 120000;
                 settings.SpraySleepOffsetMS = 1350;
                 settings.SprayActiveOffsetMS = 60;
+                settings.HTTP_Get_IP = "127.0.0.1";
+                settings.HTTP_Get_SPRAYON = "/SPRAY=ON";
+                settings.HTTP_Get_SPRAYOFF = "/SPRAY=OFF";
+                settings.HTTP_Get_SPRAYBURST = "/SPRAYDURATION=100";
+                settings.HTTP_Get_SPRAYSHORTBURST = "/SPRAYDURATION=30";
+                settings.HTTP_Get_SPRAYMEDBURST = "/SPRAYDURATION=300";
+                settings.HTTP_Get_SPRAYLONGBURST = "/SPRAYDURATION=500";
             }
 
             return settings;

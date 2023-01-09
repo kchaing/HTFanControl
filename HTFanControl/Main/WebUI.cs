@@ -486,7 +486,15 @@ namespace HTFanControl.Main
             html = html.Replace("{SpraySleepOffset}", _HTFanCtrl._settings.SpraySleepOffsetMS.ToString());
             html = html.Replace("{SprayActiveOffset}", _HTFanCtrl._settings.SprayActiveOffsetMS.ToString());
             html = html.Replace("{SprayWakeToSleepDuration}", _HTFanCtrl._settings.SprayWakeToSleepDurationMS.ToString());
-            
+
+            html = html.Replace("{HttpIP}", _HTFanCtrl._settings.HTTP_Get_IP.ToString());
+            html = html.Replace("{HttpSprayOn}", _HTFanCtrl._settings.HTTP_Get_SPRAYON.ToString());
+            html = html.Replace("{HttpSprayOff}", _HTFanCtrl._settings.HTTP_Get_SPRAYOFF.ToString());
+            html = html.Replace("{HttpSprayBurst}", _HTFanCtrl._settings.HTTP_Get_SPRAYBURST.ToString());
+            html = html.Replace("{HttpSprayShortBurst}", _HTFanCtrl._settings.HTTP_Get_SPRAYSHORTBURST.ToString());
+            html = html.Replace("{HttpSprayMedBurst}", _HTFanCtrl._settings.HTTP_Get_SPRAYMEDBURST.ToString());
+            html = html.Replace("{HttpSprayLongBurst}", _HTFanCtrl._settings.HTTP_Get_SPRAYLONGBURST.ToString());
+
             html = html.Replace("{version}", @$"Version: {_version} <a href=""checkupdate"">(Check For Update)</a>");
 
             return html;
@@ -519,6 +527,13 @@ namespace HTFanControl.Main
                 _HTFanCtrl._settings.MQTT_MED_Payload = data.RootElement.GetProperty("MqttMEDpayload").GetString();
                 _HTFanCtrl._settings.MQTT_HIGH_Topic = data.RootElement.GetProperty("MqttHIGHtopic").GetString();
                 _HTFanCtrl._settings.MQTT_HIGH_Payload = data.RootElement.GetProperty("MqttHIGHpayload").GetString();
+                _HTFanCtrl._settings.HTTP_Get_IP = data.RootElement.GetProperty("HttpIP").GetString();
+                _HTFanCtrl._settings.HTTP_Get_SPRAYON = data.RootElement.GetProperty("HttpSprayOn").GetString();
+                _HTFanCtrl._settings.HTTP_Get_SPRAYOFF = data.RootElement.GetProperty("HttpSprayOff").GetString();
+                _HTFanCtrl._settings.HTTP_Get_SPRAYBURST = data.RootElement.GetProperty("HttpSprayBurst").GetString();
+                _HTFanCtrl._settings.HTTP_Get_SPRAYSHORTBURST = data.RootElement.GetProperty("HttpSprayShortBurst").GetString();
+                _HTFanCtrl._settings.HTTP_Get_SPRAYMEDBURST = data.RootElement.GetProperty("HttpSprayMedBurst").GetString();
+                _HTFanCtrl._settings.HTTP_Get_SPRAYLONGBURST = data.RootElement.GetProperty("HttpSprayLongBurst").GetString();
                 _HTFanCtrl._settings.MQTT_ON_Topic = data.RootElement.GetProperty("MqttONtopic").GetString();
                 _HTFanCtrl._settings.MQTT_ON_Payload = data.RootElement.GetProperty("MqttONpayload").GetString();
                 _HTFanCtrl._settings.MQTT_ON_Delay = int.TryParse(data.RootElement.GetProperty("MqttONdelay").GetString(), out int MqttONdelay) ? MqttONdelay: 0;
