@@ -38,22 +38,22 @@ namespace HTFanControl.Controllers
                 switch (cmd)
                 {
                     case "SPRAYOFF":
-                        response = httpClient.GetAsync("http://192.168.50.222/SPRAY=OFF").Result;
+                        response = httpClient.GetAsync(_settings.HTTP_Get_IP + "/SPRAY=OFF").Result;
                         break;
                     case "SPRAYON":
-                        response = httpClient.GetAsync("http://192.168.50.222/SPRAY=ON").Result;
+                        response = httpClient.GetAsync(_settings.HTTP_Get_IP + "/SPRAY=ON").Result;
                         break;
                     case "BURST":
-                        response = httpClient.GetAsync("http://192.168.50.222/SPRAYDURATION=100").Result;
+                        response = httpClient.GetAsync(_settings.HTTP_Get_IP + "/SPRAYDURATION=100").Result;
                         break;
                     case "SHORTBURST":
-                        response = httpClient.GetAsync("http://192.168.50.222/SPRAYDURATION=30").Result;
+                        response = httpClient.GetAsync(_settings.HTTP_Get_IP + "/SPRAYDURATION=30").Result;
                         break;
                     case "MEDBURST":
-                        response = httpClient.GetAsync("http://192.168.50.222/SPRAYDURATION=300").Result;
+                        response = httpClient.GetAsync(_settings.HTTP_Get_IP + "/SPRAYDURATION=300").Result;
                         break;
                     case "LONGBURST":
-                        response = httpClient.GetAsync("http://192.168.50.222/SPRAYDURATION=500").Result;
+                        response = httpClient.GetAsync(_settings.HTTP_Get_IP + "/SPRAYDURATION=500").Result;
                         break;
                     default:
                         break;
